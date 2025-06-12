@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>계산기</title>
+  <style>
+    /* CSS는 요청대로 그대로 유지 */
+    body {
+      background: #1c1c1c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    .calculator {
+      background: #1c1c1c;
+      border-radius: 20px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .display {
+      background: black;
+      color: white;
+      text-align: right;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      height: 80px;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .expression {
+    .expression {
+  height: 1.5em;          /* 고정 높이 지정 (원하는 크기로 조정) */
+  overflow-x: auto;       /* 가로 스크롤 */
+  white-space: nowrap;    /* 줄바꿈 방지 */
+  text-overflow: ellipsis;/* 넘치는 텍스트는 ...으로 표시 */
+}
+
+      font-size: 16px;
+      color: #aaa;
+      height: 20px;
+    }
+    .result {
+      font-size: 40px;
+      color: white;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      font-size: 24px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: white;
+    }
+    .number {
+      background: #333;
+      border-radius: 50%;
+      height: 60px;
+      width: 60px;
+      transform: translate(6px, 0px);
+    }
+    .operator {
+      background: orange;
+      border-radius: 10px;
+      height: 60px;
+    }
+    .extra {
+      background: #666;
+      border-radius: 50%;
+      height: 60px;
+    }
+    .equal {
+      background: orange;
+      border-radius: 30px / 20px;
+      height: 60px;
+    }
+    .icon {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">
+      <div id="expression" class="expression"></div>
+      <div id="result" class="result">0</div>
+    </div>
+    <div class="buttons">
+      <button class="extra" onclick="clearAll()">AC</button>
+      <button class="extra" onclick="toggleSign()">±</button>
+      <button class="extra" onclick="togglePercent()">%</button>
+      <button class="operator" onclick="appendOperator('/')">÷</button>
+
+      <button class="number" onclick="appendNumber('7')">7</button>
+      <button class="number" onclick="appendNumber('8')">8</button>
+      <button class="number" onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperator('*')">×</button>
+
+      <button class="number" onclick="appendNumber('4')">4</button>
+      <button class="number" onclick="appendNumber('5')">5</button>
+      <button class="number" onclick="appendNumber('6')">6</button>
+      <button class="operator" onclick="appendOperator('-')">−</button>
+
+      <button class="number" onclick="appendNumber('1')">1</button>
+      <button class="number" onclick="appendNumber('2')">2</button>
+      <button class="number" onclick="appendNumber('3')">3</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+
+      <button class="extra" onclick="deleteLast()">⌫</button>
+      <button class="number" onclick="appendNumber('0')">0</button>
+      <button class="extra" onclick="appendDot()">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let currentInput = '';
+    let expression = '';
+    let lastWasCalculation = false;
+
+function updateDisplay() {
+  // 식은 항상 그대로 보여줌 (expression + currentInput 합쳐서)
+  document.getElementById('expression').textContent = expression + currentInput;
+
+  let expToCalc = expression + currentInput;
+
+  // 끝이 연산자일 경우에도 이전 숫자를 계산해서 결과를 보여주도록 수정
+  if (/[+\-*/.]$/.test(expToCalc)) {
+    // 연산자를 제거한 식으로 결과 계산 시도
+    try {
+      let expWithoutOp = expToCalc.slice(0, -1);
+      let res = eval(expWithoutOp);
+      if (!Number.isInteger(res)) {
+        res = res.toFixed(10).replace(/\.?0+$/, '');
+      }
+      document.getElementById('result').textContent = res;
+    } catch {
+      document.getElementById('result').textContent = '';
+    }
+    return;
+  }
+
+  if (expToCalc === '') {
+    document.getElementById('result').textContent = '';
+    return;
+  }
+
+  try {
+    let res = eval(expToCalc);
+    if (!Number.isInteger(res)) {
+      res = res.toFixed(10).replace(/\.?0+$/, '');
+    }
+    document.getElementById('result').textContent = res;
+  } catch {
+    document.getElementById('result').textContent = '';
+  }
+}
+
+
+    // 숫자 입력
+    function appendNumber(num) {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+      }
+      if (num === '0' && currentInput === '0') return;
+      currentInput += num;
+      updateDisplay();
+    }
+
+    // 소수점 입력
+    function appendDot() {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+      }
+      if (!currentInput.includes('.')) {
+        currentInput += currentInput ? '.' : '0.';
+        updateDisplay();
+      }
+    }
+
+    // 연산자 입력
+    function appendOperator(op) {
+      if (!currentInput && !expression) return;
+
+      if (lastWasCalculation) {
+        lastWasCalculation = false;
+      }
+
+      if (currentInput) {
+        expression += currentInput;
+        currentInput = '';
+      }
+
+      // 연산자 교체
+      if (/[+\-*/]$/.test(expression)) {
+        expression = expression.slice(0, -1) + op;
+      } else {
+        expression += op;
+      }
+      updateDisplay();
+    }
+
+ function calculate() {
+  if (!currentInput && !expression) return;
+
+  if (currentInput) {
+    expression += currentInput;
+  } else if (/[+\-*/]$/.test(expression)) {
+    expression = expression.slice(0, -1);
+  }
+
+  try {
+    let result = eval(expression);
+    if (!Number.isInteger(result)) {
+      result = result.toFixed(10).replace(/\.?0+$/, '');
+    }
+    currentInput = result.toString();
+    expression = ''; // 식은 초기화해서 안 보이도록 함
+    document.getElementById('expression').textContent = ' '; // 공백 하나로 위치 유지
+    document.getElementById('result').textContent = currentInput;
+    lastWasCalculation = true;
+  } catch {
+    currentInput = 'Error';
+    expression = '';
+    document.getElementById('expression').textContent = ' '; // 공백 하나로 위치 유지
+    document.getElementById('result').textContent = currentInput;
+    lastWasCalculation = true;
+  }
+}
+    // 삭제
+    function deleteLast() {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+        updateDisplay();
+        return;
+      }
+      if (currentInput) {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      }
+    }
+
+    // 전체 초기화
+    function clearAll() {
+      currentInput = '';
+      expression = '';
+      lastWasCalculation = false;
+      updateDisplay();
+    }
+
+    // 퍼센트 변환
+    function togglePercent() {
+      if (!currentInput) return;
+      let num = parseFloat(currentInput);
+      if (!isNaN(num)) {
+        num = num / 100;
+        currentInput = num.toString();
+        updateDisplay();
+      }
+    }
+
+    // 부호 반전
+    function toggleSign() {
+      if (!currentInput) return;
+      let num = parseFloat(currentInput);
+      if (isNaN(num)) return;
+      num = -num;
+      currentInput = num.toString();
+      updateDisplay();
+    }
+
+    // 키보드 입력 처리
+    window.addEventListener('keydown', function(e) {
+      const key = e.key;
+      if (key >= '0' && key <= '9') {
+        appendNumber(key);
+      } else if (key === '.') {
+        appendDot();
+      } else if (key === '+' || key === '-') {
+        appendOperator(key);
+      } else if (key === '*' || key === '/') {
+        appendOperator(key);
+      } else if (key === 'Enter' || key === '=') {
+        e.preventDefault();
+        calculate();
+      } else if (key === 'Backspace') {
+        deleteLast();
+      } else if (key === '%') {
+        togglePercent();
+      }
+    });
+
+    // 초기화
+    clearAll();
+  </script>
+</body>
+</html>

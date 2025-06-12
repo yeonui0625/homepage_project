@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>전화번호 입력기</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f0f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      flex-direction: column;
+    }
+    #display {
+      width: 220px;
+      height: 40px;
+      font-size: 22px;
+      margin-bottom: 8px; /* 여기를 줄임 */
+      padding: 0 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 12px;
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      height: 60px;
+      font-size: 24px;
+      border: 2px solid #007BFF;
+      border-radius: 12px;
+      background-color: #ffffff;
+      color: #007BFF;
+      cursor: pointer;
+      transition: background-color 0.25s, color 0.25s, box-shadow 0.25s;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #007BFF;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0,123,255,0.4);
+    }
+    button:active {
+      background-color: #0056b3;
+      border-color: #0056b3;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <input id="display" type="text" placeholder="번호 입력" readonly>
+  <div class="keypad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button>0</button><button>*</button><button>#</button>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    document.querySelectorAll('button').forEach(btn => {
+      btn.onclick = () => {
+        const value = btn.textContent;
+        let raw = display.value.replace(/-/g, '');
+
+        if (raw.length >= 11) return;
+
+        raw += value;
+
+        let formatted = '';
+        for (let i = 0; i < raw.length; i++) {
+          if (i === 3 || i === 7) formatted += '-';
+          formatted += raw[i];
+        }
+
+        display.value = formatted;
+      };
+    });
+  </script>
+</body>
+</html>

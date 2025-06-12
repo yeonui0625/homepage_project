@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>한글 타자기</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hangul-js@0.2.4/hangul.min.js"></script>
+    <style>
+    /* 전체 레이아웃 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .typewriter-container {
+        background: #2c3e50;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        max-width: 900px;
+        width: 100%;
+    }
+
+    /* 헤더 부분 */
+    .typewriter-header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+    }
+
+    .typewriter-header h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .author-info {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        display: inline-block;
+    }
+
+    .author-info p {
+        margin: 5px 0;
+        font-size: 1.1em;
+    }
+
+    /* 종이 (Label) */
+    .paper-container {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .paper {
+        background: #f8f9fa;
+        width: 100%;
+        min-height: 150px;
+        border: 2px solid #34495e;
+        border-radius: 10px;
+        padding: 20px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        font-family: 'Courier New', monospace;
+        color: #2c3e50;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        cursor: text;
+    }
+
+    /* 테스트 정보 */
+    .test-info {
+        text-align: center;
+        margin-top: 10px;
+        color: #7f8c8d;
+        font-style: italic;
+    }
+
+    /* 컨트롤 패널 */
+    .control-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        gap: 20px;
+    }
+
+    /* 언어 토글 버튼 */
+    .language-toggle {
+        display: flex;
+        align-items: center;
+    }
+
+    .lang-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1.1em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    .lang-btn:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+
+    .lang-btn.korean {
+        background: #27ae60;
+    }
+
+    .lang-btn.korean:hover {
+        background: #229954;
+    }
+
+    /* 한글 입력 방식 선택 */
+    .hangul-mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+    }
+
+    .hangul-mode-toggle label {
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .hangul-mode-select {
+        background: #34495e;
+        color: white;
+        border: 2px solid #5d6d7e;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 200px;
+    }
+
+    .hangul-mode-select:hover {
+        border-color: #85929e;
+    }
+
+    .hangul-mode-select:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    }
+
+    /* 키보드 전체 */
+    .keyboard {
+        background: #34495e;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+        position: relative;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        gap: 8px;
+    }
+
+    /* 키 기본 스타일 */
+    .key {
+        background: #ecf0f1;
+        border: 2px solid #bdc3c7;
+        border-radius: 8px;
+        padding: 15px;
+        min-width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        user-select: none;
+        color: #2c3e50;
+    }
+
+    /* 4가지 그룹별 색상 구분 */
+    /* 숫자 키 그룹 - 파란색 */
+    .number-key {
+        background: #3498db;
+        color: white;
+        border-color: #2980b9;
+    }
+
+    .number-key:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    .number-key.active {
+        background: #1f4e79!important;
+        transform: scale(0.95);
+    }
+
+    /* 첫 번째 행 문자 키 - 초록색 */
+    .first-row .letter-key {
+        background: #2ecc71;
+        color: white;
+        border-color: #27ae60;
+    }
+
+    .first-row .letter-key:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
+    }
+
+    .first-row .letter-key.active {
+        background: #1e8449!important;
+        transform: scale(0.95);
+    }
+
+    /* 두 번째 행 문자 키 - 주황색 */
+    .second-row .letter-key {
+        background: #f39c12;
+        color: white;
+        border-color: #e67e22;
+    }
+
+    .second-row .letter-key:hover {
+        background: #e67e22;
+        transform: translateY(-2px);
+    }
+
+    .second-row .letter-key.active {
+        background: #b7670f!important;
+        transform: scale(0.95);
+    }
+
+    /* 세 번째 행 문자 키 - 보라색 */
+    .third-row .letter-key {
+        background: #9b59b6;
+        color: white;
+        border-color: #8e44ad;
+    }
+
+    .third-row .letter-key:hover {
+        background: #8e44ad;
+        transform: translateY(-2px);
+    }
+
+    .third-row .letter-key.active {
+        background: #6c3483!important;
+        transform: scale(0.95);
+    }
+
+    /* 특수 토글 키 (.) - 빨간색으로 구분 */
+    .special-toggle {
+        background: #e74c3c!important;
+        border-color: #c0392b!important;
+        font-weight: bold;
+        font-size: 0.9em!important;
+    }
+
+    .special-toggle:hover {
+        background: #c0392b!important;
+    }
+
+    /* 한글 모드일 때 특수 토글 키 스타일 */
+    .korean-mode .special-toggle {
+        background: #27ae60!important;
+        border-color: #229954!important;
+    }
+
+    .korean-mode .special-toggle:hover {
+        background: #229954!important;
+    }
+
+    /* 키 눌림 효과 */
+    .key.active {
+        transform: scale(0.95);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 한글 모드일 때 키 텍스트 변경 */
+    .korean-mode .key {
+        font-size: 1.1em;
+        font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    }
+
+    /* 한글/영어 모드 전환 애니메이션 */
+    .key {
+        transition: all 0.2s ease;
+    }
+
+    /* 언어 모드 표시 */
+    .keyboard::before {
+        content: '영어 모드';
+        position: absolute;
+        top: -30px;
+        right: 10px;
+        font-weight: bold;
+        color: #ecf0f1;
+        font-size: 1em;
+        transition: content 0.3s ease;
+    }
+
+    .korean-mode .keyboard::before {
+        content: '한글 모드';
+        color: #2ecc71;
+    }
+    </style>
+</head>
+<body>
+    <div class="typewriter-container">
+        <div class="typewriter-header">
+            <h1>한글 타자기</h1>
+            <div class="author-info">
+                <p>제작자: 홍연의</p>
+                <p>학번: 2402218</p>
+                <p>소속: 한양여자대학교 빅데이터학과</p>
+            </div>
+        </div>
+
+        <div class="paper-container">
+            <label id="paper" class="paper"></label>
+            <div class="test-info">
+                <small>테스트: 나열형(ㄱㅏ → ㄱㅏ), 조합형(ㄱㅏ → 가), 완성형(ㄱㅏ → 가)</small>
+            </div>
+        </div>
+
+<div class="keyboard-container">
+    <div class="control-panel">
+        <div class="language-toggle">
+            <button id="lang-toggle" class="lang-btn">한/영</button>
+        </div>
+        <div class="hangul-mode-toggle" id="hangul-mode-container">
+            <label>한글 입력 방식:</label>
+            <select id="hangul-mode" class="hangul-mode-select">
+                <option value="sequence">나열형 (자음모음 나열)</option>
+                <option value="combination" selected>조합형 (실시간 조합)</option>
+                <option value="complete">완성형 (완성글자만)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="keyboard" id="keyboard">
+        <div class="row number-row">
+            <div class="key number-key" data-key="1">1</div>
+            <div class="key number-key" data-key="2">2</div>
+            <div class="key number-key" data-key="3">3</div>
+            <div class="key number-key" data-key="4">4</div>
+            <div class="key number-key" data-key="5">5</div>
+            <div class="key number-key" data-key="6">6</div>
+            <div class="key number-key" data-key="7">7</div>
+            <div class="key number-key" data-key="8">8</div>
+            <div class="key number-key" data-key="9">9</div>
+            <div class="key number-key" data-key="0">0</div>
+        </div>
+        <div class="row first-row">
+            <div class="key letter-key" data-key="q">q</div>
+            <div class="key letter-key" data-key="w">w</div>
+            <div class="key letter-key" data-key="e">e</div>
+            <div class="key letter-key" data-key="r">r</div>
+            <div class="key letter-key" data-key="t">t</div>
+            <div class="key letter-key" data-key="y">y</div>
+            <div class="key letter-key" data-key="u">u</div>
+            <div class="key letter-key" data-key="i">i</div>
+            <div class="key letter-key" data-key="o">o</div>
+            <div class="key letter-key" data-key="p">p</div>
+        </div>
+        <div class="row second-row">
+            <div class="key letter-key" data-key="a">a</div>
+            <div class="key letter-key" data-key="s">s</div>
+            <div class="key letter-key" data-key="d">d</div>
+            <div class="key letter-key" data-key="f">f</div>
+            <div class="key letter-key" data-key="g">g</div>
+            <div class="key letter-key" data-key="h">h</div>
+            <div class="key letter-key" data-key="j">j</div>
+            <div class="key letter-key" data-key="k">k</div>
+            <div class="key letter-key" data-key="l">l</div>
+        </div>
+        <div class="row third-row">
+            <div class="key letter-key" data-key="z">z</div>
+            <div class="key letter-key" data-key="x">x</div>
+            <div class="key letter-key" data-key="c">c</div>
+            <div class="key letter-key" data-key="v">v</div>
+            <div class="key letter-key" data-key="b">b</div>
+            <div class="key letter-key" data-key="n">n</div>
+            <div class="key letter-key" data-key="m">m</div>
+            <div class="key letter-key" data-key=",">,</div>
+            <div class="key letter-key special-toggle" data-key=".">한</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 전역 변수
+let isKoreanMode = true;
+let hangulInputMode = 'combination'; // 'sequence', 'combination', 'complete'
+let currentText = '';
+let currentBuffer = '';          // 한글 조합 버퍼
+let currentEnglishBuffer = '';   // 영어 조합 버퍼
+
+// 키보드 한글 매핑 (두벌식)
+const koreanMap = {
+    'q': 'ㅂ', 'w': 'ㅈ', 'e': 'ㄷ', 'r': 'ㄱ', 't': 'ㅅ',
+    'y': 'ㅛ', 'u': 'ㅕ', 'i': 'ㅑ', 'o': 'ㅐ', 'p': 'ㅔ',
+    'a': 'ㅁ', 's': 'ㄴ', 'd': 'ㅇ', 'f': 'ㄹ', 'g': 'ㅎ',
+    'h': 'ㅗ', 'j': 'ㅓ', 'k': 'ㅏ', 'l': 'ㅣ',
+    'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'b': 'ㅠ',
+    'n': 'ㅜ', 'm': 'ㅡ', ',': ',', '.': '.'
+};
+
+// 영어 매핑
+const englishMap = {
+    'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't',
+    'y': 'y', 'u': 'u', 'i': 'i', 'o': 'o', 'p': 'p',
+    'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g',
+    'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l',
+    'z': 'z', 'x': 'x', 'c': 'c', 'v': 'v', 'b': 'b',
+    'n': 'n', 'm': 'm', ',': ',', '.': '.'
+};
+
+const paper = document.getElementById('paper');
+const keyboard = document.getElementById('keyboard');
+const langToggle = document.getElementById('lang-toggle');
+const hangulModeSelect = document.getElementById('hangul-mode');
+const hangulModeContainer = document.getElementById('hangul-mode-container');
+const keys = document.querySelectorAll('.key');
+
+// hangul-js 조합 함수 사용 예외 처리
+function decomposeHangul(text) {
+    try {
+        return Hangul.d(text);
+    } catch {
+        return text.split('');
+    }
+}
+
+function handleSequenceInput(char) {
+    currentText += char;
+    currentBuffer = '';
+    updatePaper();
+}
+
+function handleCombinationInput(char) {
+    currentBuffer += char;
+    let composed = Hangul.assemble(Hangul.d(currentBuffer));
+
+    if (hangulInputMode === 'complete') {
+        // 완성된 음절이 하나 완성된 경우에만 출력
+        if (composed.length === 1 && Hangul.isComplete(composed)) {
+            currentText += composed;
+            currentBuffer = ''; // 조합 완료 후 버퍼 초기화
+            updatePaper(); // 완성된 글자만 출력
+        } 
+        // else 구문 삭제 또는 아무것도 하지 않음: 조합 중인 상태는 표시 안함
+    } else {
+        // 조합형 모드: 중간 자모도 계속 출력
+        updatePaper(composed || currentBuffer);
+    }
+}
+
+
+function updatePaper(extraText = '') {
+    paper.textContent = currentText + extraText;
+}
+
+function handleKeyPress(keyValue, keyElement) {
+    animateKey(keyElement);
+
+    if (keyValue === '.') {
+        toggleLanguage();
+        return;
+    }
+
+    if (keyValue === ' ') {
+        if (isKoreanMode) {
+            currentText += currentBuffer + ' ';
+            currentBuffer = '';
+        } else {
+            currentText += currentEnglishBuffer + ' ';
+            currentEnglishBuffer = '';
+        }
+        updatePaper();
+    } else if (keyValue === 'Backspace') {
+        if (isKoreanMode) {
+            if (currentBuffer.length > 0) {
+                currentBuffer = currentBuffer.slice(0, -1);
+                if (hangulInputMode === 'combination' || hangulInputMode === 'complete') {
+                    const composed = Hangul.assemble(Hangul.d(currentBuffer));
+                    updatePaper(composed || currentBuffer);
+                } else {
+                    updatePaper(currentBuffer);
+                }
+            } else if (currentText.length > 0) {
+                currentText = currentText.slice(0, -1);
+                updatePaper();
+            }
+        } else {
+            if (currentEnglishBuffer.length > 0) {
+                currentEnglishBuffer = currentEnglishBuffer.slice(0, -1);
+                updatePaper(currentEnglishBuffer);
+            } else if (currentText.length > 0) {
+                currentText = currentText.slice(0, -1);
+                updatePaper();
+            }
+        }
+    } else 
+   if (isKoreanMode) {
+    const koreanChar = koreanMap[keyValue];
+    if (koreanChar) {
+        if (hangulInputMode === 'sequence') {
+            handleSequenceInput(koreanChar);
+        } else {
+            handleCombinationInput(koreanChar);
+        }
+    } else if (!isNaN(keyValue)) {
+        currentText += keyValue;
+        updatePaper();  // 버퍼 없이 전체 텍스트 출력
+    }
+} else 
+    if (englishMap[keyValue]) {
+        currentEnglishBuffer += englishMap[keyValue];
+        updatePaper(currentEnglishBuffer);
+    } else if (!isNaN(keyValue)) {
+        currentText += keyValue;
+        updatePaper();  // 버퍼 없이 전체 텍스트 출력
+    }
+}
+
+
+
+function animateKey(key) {
+    if (!key) return;
+    key.classList.add('active');
+    setTimeout(() => key.classList.remove('active'), 200);
+}
+
+function toggleLanguage() {
+    isKoreanMode = !isKoreanMode;
+    langToggle.textContent = isKoreanMode ? '한/영 (한글)' : '한/영 (영어)';
+    currentBuffer = '';
+    currentEnglishBuffer = '';
+    updatePaper();
+    keys.forEach(key => {
+        const keyVal = key.dataset.key;
+        if (koreanMap[keyVal]) {
+            key.textContent = isKoreanMode ? koreanMap[keyVal] : englishMap[keyVal];
+        }
+    });
+}
+
+
+
+langToggle.addEventListener('click', () => {
+    toggleLanguage();
+});
+
+hangulModeSelect.addEventListener('change', (e) => {
+    hangulInputMode = e.target.value;
+    // currentText = '';  // 삭제: 텍스트 초기화하지 않음
+    currentBuffer = '';
+    updatePaper();
+});
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Shift' || e.key === 'CapsLock') return;
+
+    if (e.key === '.') {
+        e.preventDefault();
+        toggleLanguage();
+        return;
+    }
+
+    let keyChar = e.key.toLowerCase();
+
+    const keyElement = document.querySelector(`.key[data-key="${keyChar}"]`);
+    if (!keyElement) {
+        return;
+    }
+
+    e.preventDefault();
+    handleKeyPress(keyChar, keyElement);
+});
+
+// 초기 상태 세팅
+toggleLanguage();
+</script>
