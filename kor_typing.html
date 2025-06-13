@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>한글 타자기</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hangul-js@0.2.4/hangul.min.js"></script>
+    <style>
+    /* 전체 레이아웃 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+   body {
+    font-family: 'Arial', sans-serif;
+    background: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.typewriter-container {
+    background: #fff8dc;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+.typewriter-header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #5a4a2f;
+}
+
+.typewriter-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.author-info {
+    background: rgba(255, 239, 184, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    display: inline-block;
+    color: #5a4a2f;
+}
+
+.author-info p {
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+
+.paper-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.paper {
+    background: #fffdf6;
+    width: 100%;
+    min-height: 150px;
+    border: 2px solid #e3cfa2;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.2em;
+    line-height: 1.6;
+    font-family: 'Courier New', monospace;
+    color: #5a4a2f;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    cursor: text;
+}
+
+.test-info {
+    text-align: center;
+    margin-top: 10px;
+    color: #a3987a;
+    font-style: italic;
+}
+
+.control-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff3dc;
+    border-radius: 10px;
+    gap: 20px;
+}
+
+.language-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.lang-btn {
+    background: #f7d774;
+    color: #5a4a2f;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.lang-btn:hover {
+    background: #f3cc5c;
+    transform: translateY(-2px);
+}
+
+.lang-btn.korean {
+    background: #e6b764;
+}
+
+.lang-btn.korean:hover {
+    background: #d9a64f;
+}
+
+.hangul-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #5a4a2f;
+}
+
+.hangul-mode-toggle label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.hangul-mode-select {
+    background: #fce9ae;
+    color: #5a4a2f;
+    border: 2px solid #e1c75f;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.hangul-mode-select:hover {
+    border-color: #d0b74e;
+}
+
+.hangul-mode-select:focus {
+    outline: none;
+    border-color: #f2c94c;
+    box-shadow: 0 0 0 3px rgba(242, 201, 76, 0.3);
+}
+
+.keyboard {
+    background: #fff3dc;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.key {
+    background: #fffaf0;
+    border: 2px solid #e5d4aa;
+    border-radius: 8px;
+    padding: 15px;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    user-select: none;
+    color: #5a4a2f;
+}
+
+.number-key {
+    background: #f9deb9;
+    color: #5a4a2f;
+    border-color: #e9c8a5;
+}
+
+.number-key:hover {
+    background: #f2cfa3;
+    transform: translateY(-2px);
+}
+
+.number-key.active {
+    background: #e3bb8e !important;
+    transform: scale(0.95);
+}
+
+.first-row .letter-key {
+    background: #fce6ae;
+    color: #5a4a2f;
+    border-color: #e7d093;
+}
+
+.first-row .letter-key:hover {
+    background: #fbdc91;
+    transform: translateY(-2px);
+}
+
+.first-row .letter-key.active {
+    background: #f3c36e !important;
+    transform: scale(0.95);
+}
+
+.second-row .letter-key {
+    background: #f8cd7f;
+    color: #5a4a2f;
+    border-color: #e3b763;
+}
+
+.second-row .letter-key:hover {
+    background: #f4bd61;
+    transform: translateY(-2px);
+}
+
+.second-row .letter-key.active {
+    background: #e6a842 !important;
+    transform: scale(0.95);
+}
+
+.third-row .letter-key {
+    background: #e6b764;
+    color: white;
+    border-color: #d2a24b;
+}
+
+.third-row .letter-key:hover {
+    background: #d9a64f;
+    transform: translateY(-2px);
+}
+
+.third-row .letter-key.active {
+    background: #c28f38 !important;
+    transform: scale(0.95);
+}
+
+.special-toggle {
+    background: #f7d774 !important;
+    border-color: #e3c25f !important;
+    font-weight: bold;
+    font-size: 0.9em !important;
+    color: #5a4a2f !important;
+}
+
+.special-toggle:hover {
+    background: #f3cc5c !important;
+}
+
+.korean-mode .special-toggle {
+    background: #e6b764 !important;
+    border-color: #d2a24b !important;
+}
+
+.korean-mode .special-toggle:hover {
+    background: #d9a64f !important;
+}
+
+.key.active {
+    transform: scale(0.95);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.korean-mode .key {
+    font-size: 1.1em;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+}
+
+.key {
+    transition: all 0.2s ease;
+}
+
+
+.korean-mode .keyboard::before {
+    content: '한글 모드';
+    color: #e6b764;
+}
+    </style>
+</head>
+<body>
+    <div class="typewriter-container">
+        <div class="typewriter-header">
+            <h1>한글 타자기</h1>
+            <div class="author-info">
+                <p>제작자: 홍연의</p>
+                <p>학번: 2402218</p>
+                <p>소속: 한양여자대학교 빅데이터학과</p>
+            </div>
+        </div>
+
+        <div class="paper-container">
+            <label id="paper" class="paper"></label>
+            <div class="test-info">
+                <small>테스트: 나열형(ㄱㅏ → ㄱㅏ),조합형(ㄱㅏ → 가), 완성형(ㄱㅏ → 가)</small>
+            </div>
+        </div>
+
+<div class="keyboard-container">
+    <div class="control-panel">
+        <div class="language-toggle">
+        </div>
+        <div class="hangul-mode-toggle" id="hangul-mode-container">
+            <label>한글 입력 방식:</label>
+            <select id="hangul-mode" class="hangul-mode-select">
+                <option value="sequence">나열형 (자음모음 나열)</option>
+                <option value="combination" selected>조합형 (실시간 조합)</option>
+                <option value="complete">완성형 (완성글자만)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="keyboard" id="keyboard">
+        <div class="row number-row">
+            <div class="key number-key" data-key="1">1</div>
+            <div class="key number-key" data-key="2">2</div>
+            <div class="key number-key" data-key="3">3</div>
+            <div class="key number-key" data-key="4">4</div>
+            <div class="key number-key" data-key="5">5</div>
+            <div class="key number-key" data-key="6">6</div>
+            <div class="key number-key" data-key="7">7</div>
+            <div class="key number-key" data-key="8">8</div>
+            <div class="key number-key" data-key="9">9</div>
+            <div class="key number-key" data-key="0">0</div>
+        </div>
+        <div class="row first-row">
+            <div class="key letter-key" data-key="q">q</div>
+            <div class="key letter-key" data-key="w">w</div>
+            <div class="key letter-key" data-key="e">e</div>
+            <div class="key letter-key" data-key="r">r</div>
+            <div class="key letter-key" data-key="t">t</div>
+            <div class="key letter-key" data-key="y">y</div>
+            <div class="key letter-key" data-key="u">u</div>
+            <div class="key letter-key" data-key="i">i</div>
+            <div class="key letter-key" data-key="o">o</div>
+            <div class="key letter-key" data-key="p">p</div>
+        </div>
+        <div class="row second-row">
+            <div class="key letter-key" data-key="a">a</div>
+            <div class="key letter-key" data-key="s">s</div>
+            <div class="key letter-key" data-key="d">d</div>
+            <div class="key letter-key" data-key="f">f</div>
+            <div class="key letter-key" data-key="g">g</div>
+            <div class="key letter-key" data-key="h">h</div>
+            <div class="key letter-key" data-key="j">j</div>
+            <div class="key letter-key" data-key="k">k</div>
+            <div class="key letter-key" data-key="l">l</div>
+        </div>
+        <div class="row third-row">
+            <div class="key letter-key" data-key="z">z</div>
+            <div class="key letter-key" data-key="x">x</div>
+            <div class="key letter-key" data-key="c">c</div>
+            <div class="key letter-key" data-key="v">v</div>
+            <div class="key letter-key" data-key="b">b</div>
+            <div class="key letter-key" data-key="n">n</div>
+            <div class="key letter-key" data-key="m">m</div>
+            <div class="key letter-key" data-key=",">,</div>
+            <div class="key letter-key special-toggle" data-key=".">.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 전역 변수
+let hangulInputMode = 'combination'; // 'sequence', 'combination', 'complete'
+let currentText = '';
+let currentBuffer = '';          // 한글 조합 버퍼
+
+// 키보드 한글 매핑 (두벌식)
+const koreanMap = {
+    'q': 'ㅂ', 'w': 'ㅈ', 'e': 'ㄷ', 'r': 'ㄱ', 't': 'ㅅ',
+    'y': 'ㅛ', 'u': 'ㅕ', 'i': 'ㅑ', 'o': 'ㅐ', 'p': 'ㅔ',
+    'a': 'ㅁ', 's': 'ㄴ', 'd': 'ㅇ', 'f': 'ㄹ', 'g': 'ㅎ',
+    'h': 'ㅗ', 'j': 'ㅓ', 'k': 'ㅏ', 'l': 'ㅣ',
+    'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'b': 'ㅠ',
+    'n': 'ㅜ', 'm': 'ㅡ', ',': ',', '.': '.'
+};
+
+const paper = document.getElementById('paper');
+const keyboard = document.getElementById('keyboard');
+const hangulModeSelect = document.getElementById('hangul-mode');
+const hangulModeContainer = document.getElementById('hangul-mode-container');
+const keys = document.querySelectorAll('.key');
+
+function decomposeHangul(text) {
+    try {
+        return Hangul.d(text);
+    } catch {
+        return text.split('');
+    }
+}
+
+function handleSequenceInput(char) {
+    currentText += char;
+    currentBuffer = '';
+    updatePaper();
+}
+
+function handleCombinationInput(char) {
+    currentBuffer += char;
+    let composed = Hangul.assemble(Hangul.d(currentBuffer));
+
+    if (hangulInputMode === 'complete') {
+        if (composed.length === 1 && Hangul.isComplete(composed)) {
+            currentText += composed;
+            currentBuffer = '';
+            updatePaper();
+        }
+    } else {
+        updatePaper(composed || currentBuffer);
+    }
+}
+
+function updatePaper(extraText = '') {
+    paper.textContent = currentText + extraText;
+}
+
+function handleKeyPress(keyValue, keyElement) {
+    animateKey(keyElement);
+
+    if (keyValue === ' ') {
+        currentText += currentBuffer + ' ';
+        currentBuffer = '';
+        updatePaper();
+    } else if (keyValue === 'Backspace') {
+        if (currentBuffer.length > 0) {
+            currentBuffer = currentBuffer.slice(0, -1);
+            if (hangulInputMode === 'combination' || hangulInputMode === 'complete') {
+                const composed = Hangul.assemble(Hangul.d(currentBuffer));
+                updatePaper(composed || currentBuffer);
+            } else {
+                updatePaper(currentBuffer);
+            }
+        } else if (currentText.length > 0) {
+            currentText = currentText.slice(0, -1);
+            updatePaper();
+        }
+    } else if (koreanMap[keyValue]) {
+        if (hangulInputMode === 'sequence') {
+            handleSequenceInput(koreanMap[keyValue]);
+        } else {
+            handleCombinationInput(koreanMap[keyValue]);
+        }
+    } else if (!isNaN(keyValue)) {
+        currentText += keyValue;
+        updatePaper();
+    }
+}
+
+function animateKey(key) {
+    if (!key) return;
+    key.classList.add('active');
+    setTimeout(() => key.classList.remove('active'), 200);
+}
+
+hangulModeSelect.addEventListener('change', (e) => {
+    hangulInputMode = e.target.value;
+    currentBuffer = '';
+    updatePaper();
+});
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Shift' || e.key === 'CapsLock') return;
+
+    let keyChar = e.key.toLowerCase();
+    const keyElement = document.querySelector(`.key[data-key="${keyChar}"]`);
+    if (!keyElement) return;
+
+    e.preventDefault();
+    handleKeyPress(keyChar, keyElement);
+});
+
+</script>
+</html>
