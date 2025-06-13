@@ -2,97 +2,280 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>전화번호 입력기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>계산기</title>
   <style>
-   body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #ffffff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  flex-direction: column;
+    body {
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    .calculator {
+      background: #1c1c1c;
+      border-radius: 20px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .display {
+      background: black;
+      color: white;
+      text-align: right;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      height: 80px;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .expression {
+      font-size: 16px;
+      color: #aaa;
+      height: 20px;
+      overflow-x: auto;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .result {
+      font-size: 40px;
+      color: white;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      font-size: 24px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: white;
+    }
+    .number {
+      background: #333;
+      border-radius: 50%;
+      height: 60px;
+      width: 60px;
+      transform: translate(6px, 0px);
+    }
+    .operator {
+      background: orange;
+      border-radius: 10px;
+      height: 60px;
+    }
+    .extra {
+      background: #666;
+      border-radius: 50%;
+      height: 60px;
+    }
+    .equal {
+      background: orange;
+      border-radius: 30px / 20px;
+      height: 60px;
+    }
+    /* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-#display {
-  width: 220px;
-  height: 40px;
-  font-size: 22px;
-  margin-bottom: 8px;
-  padding: 0 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
-  background-color: #fff;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-  user-select: none;
-}
-
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 70px);
-  gap: 12px;
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-button {
-  height: 60px;
-  font-size: 24px;
-  border: 2px solid #e3b763;
-  border-radius: 12px;
-  background-color: #fffaf0;
-  color: #5a4a2f;
-  cursor: pointer;
-  transition: background-color 0.25s, color 0.25s, box-shadow 0.25s;
-  user-select: none;
-}
-
-button:hover {
-  background-color: #f3cc5c;
-  color: #5a4a2f;
-  box-shadow: 0 4px 8px rgba(243, 204, 92, 0.4);
-}
-
-button:active {
-  background-color: #d9a64f;
-  border-color: #d9a64f;
-  box-shadow: none;
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
   </style>
 </head>
 <body>
-  <input id="display" type="text" placeholder="번호 입력" readonly>
-  <div class="keypad">
-    <button>1</button><button>2</button><button>3</button>
-    <button>4</button><button>5</button><button>6</button>
-    <button>7</button><button>8</button><button>9</button>
-    <button>0</button><button>*</button><button>#</button>
+  <div class="calculator">
+    <div id="display" class="display">
+      <div id="expression" class="expression"></div>
+      <div id="result" class="result">0</div>
+    </div>
+    <div class="buttons">
+      <button class="extra" onclick="clearAll()">AC</button>
+      <button class="extra" onclick="toggleSign()">±</button>
+      <button class="extra" onclick="togglePercent()">%</button>
+      <button class="operator" onclick="appendOperator('/')">÷</button>
+
+      <button class="number" onclick="appendNumber('7')">7</button>
+      <button class="number" onclick="appendNumber('8')">8</button>
+      <button class="number" onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperator('*')">×</button>
+
+      <button class="number" onclick="appendNumber('4')">4</button>
+      <button class="number" onclick="appendNumber('5')">5</button>
+      <button class="number" onclick="appendNumber('6')">6</button>
+      <button class="operator" onclick="appendOperator('-')">−</button>
+
+      <button class="number" onclick="appendNumber('1')">1</button>
+      <button class="number" onclick="appendNumber('2')">2</button>
+      <button class="number" onclick="appendNumber('3')">3</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+
+      <button class="extra" onclick="deleteLast()">⌫</button>
+      <button class="number" onclick="appendNumber('0')">0</button>
+      <button class="extra" onclick="appendDot()">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
   </div>
 
   <script>
-    const display = document.getElementById('display');
-    document.querySelectorAll('button').forEach(btn => {
-      btn.onclick = () => {
-        const value = btn.textContent;
-        let raw = display.value.replace(/-/g, '');
+    let currentInput = '';
+    let expression = '';
+    let lastWasCalculation = false;
 
-        if (raw.length >= 11) return;
+    function updateDisplay() {
+      document.getElementById('expression').textContent = expression + currentInput;
+      let expToCalc = expression + currentInput;
 
-        raw += value;
-
-        let formatted = '';
-        for (let i = 0; i < raw.length; i++) {
-          if (i === 3 || i === 7) formatted += '-';
-          formatted += raw[i];
+      if (/[+\-*/.]$/.test(expToCalc)) {
+        try {
+          let expWithoutOp = expToCalc.slice(0, -1);
+          let res = eval(expWithoutOp);
+          if (!Number.isInteger(res)) res = res.toFixed(10).replace(/\.?0+$/, '');
+          document.getElementById('result').textContent = res;
+        } catch {
+          document.getElementById('result').textContent = '';
         }
+        return;
+      }
 
-        display.value = formatted;
-      };
+      if (expToCalc === '') {
+        document.getElementById('result').textContent = '';
+        return;
+      }
+
+      try {
+        let res = eval(expToCalc);
+        if (!Number.isInteger(res)) res = res.toFixed(10).replace(/\.?0+$/, '');
+        document.getElementById('result').textContent = res;
+      } catch {
+        document.getElementById('result').textContent = '';
+      }
+    }
+
+    function appendNumber(num) {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+      }
+      if (num === '0' && currentInput === '0') return;
+      currentInput += num;
+      updateDisplay();
+    }
+
+    function appendDot() {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+      }
+      if (!currentInput.includes('.')) {
+        currentInput += currentInput ? '.' : '0.';
+        updateDisplay();
+      }
+    }
+
+    function appendOperator(op) {
+      if (!currentInput && !expression) return;
+      if (lastWasCalculation) lastWasCalculation = false;
+      if (currentInput) {
+        expression += currentInput;
+        currentInput = '';
+      }
+      if (/[+\-*/]$/.test(expression)) {
+        expression = expression.slice(0, -1) + op;
+      } else {
+        expression += op;
+      }
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!currentInput && !expression) return;
+      if (currentInput) expression += currentInput;
+      else if (/[+\-*/]$/.test(expression)) expression = expression.slice(0, -1);
+
+      try {
+        let result = eval(expression);
+        if (!Number.isInteger(result)) result = result.toFixed(10).replace(/\.?0+$/, '');
+        currentInput = result.toString();
+        expression = '';
+        document.getElementById('expression').textContent = ' ';
+        document.getElementById('result').textContent = currentInput;
+        lastWasCalculation = true;
+      } catch {
+        currentInput = 'Error';
+        expression = '';
+        document.getElementById('expression').textContent = ' ';
+        document.getElementById('result').textContent = currentInput;
+        lastWasCalculation = true;
+      }
+    }
+
+    function deleteLast() {
+      if (lastWasCalculation) {
+        currentInput = '';
+        expression = '';
+        lastWasCalculation = false;
+        updateDisplay();
+        return;
+      }
+      if (currentInput) {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      }
+    }
+
+    function clearAll() {
+      currentInput = '';
+      expression = '';
+      lastWasCalculation = false;
+      updateDisplay();
+    }
+
+    function togglePercent() {
+      if (!currentInput) return;
+      let num = parseFloat(currentInput);
+      if (!isNaN(num)) {
+        currentInput = (num / 100).toString();
+        updateDisplay();
+      }
+    }
+
+    function toggleSign() {
+      if (!currentInput) return;
+      let num = parseFloat(currentInput);
+      if (!isNaN(num)) {
+        currentInput = (-num).toString();
+        updateDisplay();
+      }
+    }
+
+    window.addEventListener('keydown', function(e) {
+      const key = e.key;
+      if (key >= '0' && key <= '9') appendNumber(key);
+      else if (key === '.') appendDot();
+      else if ('+-*/'.includes(key)) appendOperator(key);
+      else if (key === 'Enter' || key === '=') {
+        e.preventDefault();
+        calculate();
+      } else if (key === 'Backspace') deleteLast();
+      else if (key === '%') togglePercent();
     });
+
+    clearAll();
   </script>
 </body>
 </html>
