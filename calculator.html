@@ -81,12 +81,20 @@
       border-radius: 30px / 20px;
       height: 60px;
     }
-    /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+
+.expression, .result {
+  appearance: none;
   -webkit-appearance: none;
-  margin: 0;
+  -moz-appearance: none;
+  overflow-y: hidden; /* 세로 스크롤 완전 제거 */
+  scrollbar-width: none; /* Firefox 대응 */
 }
+
+.expression::-webkit-scrollbar,
+.result::-webkit-scrollbar {
+  display: none; /* Chrome 대응 */
+}
+
 
   </style>
 </head>

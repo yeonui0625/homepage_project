@@ -4,296 +4,149 @@
   <meta charset="UTF-8">
   <title>한양여자대학교 포트폴리오</title>
   <style>
-    body {
-      font-family: "Malgun Gothic", sans-serif;
+    html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
+      font-family: "Malgun Gothic", sans-serif;
+      background: #fff;
+    }
+
+    .gnb, footer {
+      width: 100vw;
+      box-sizing: border-box;
+      padding: 20px 160px;
+    }
+
+    .gnb {
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      justify-content: space-between;
+      align-items: center;
     }
 
-.gnb {
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 160px;  /* GNB 전체 높이 증가 */
-}
-
-.gnb .left {
-  display: flex;
-  align-items: center;
-}
-
-.gnb img {
-  height: 40px;        /* 로고 크기 증가 */
-  margin-right: 12px;
-}
-
-.gnb .left span {
-  font-size: 21px;
-  color: #003478;
-  font-weight: 700;
-  font-family: "Malgun Gothic", sans-serif;
-}
-
-.gnb .right {
-  display: flex;
-  justify-content: center;
-  flex: 1;
-  gap: 70px;           /* 메뉴 간 간격도 넓힘 */
-  margin-right: 160px;
-}
-
-.gnb .right a {
-  text-decoration: none;
-  color: #000;
-  font-size: 18px;     /* 글자 크기 증가 */
-  font-weight: 700;    /* 글자 더 굵게 */
-  font-family: "Malgun Gothic", sans-serif;
-  transition: color 0.2s;
-}
-
-.gnb .right a:hover {
-  color: #005bac;
-}
-
-    .content {
-      flex: 1;
-      padding: 60px 160px 80px;
-    }
-    .content h2 {
-      font-size: 20px;
-      color: #002F6C;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #002F6C;
-      padding-bottom: 10px;
-    }
-    .sitemap {
+    .gnb .left {
       display: flex;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+      align-items: center;
     }
-    .sitemap div {
-      flex: 1;
-      min-width: 150px;
+
+    .gnb img {
+      height: 40px;
+      margin-right: 12px;
     }
-    .sitemap a {
-      display: block;
-      text-decoration: none;
+
+    .gnb .left span {
+      font-size: 21px;
       color: #003478;
-      font-size: 14px;
-      margin: 8px 0;
-    }
-    .sitemap a:hover {
-      text-decoration: underline;
+      font-weight: 700;
     }
 
-footer {
-  /* position: relative;  ← 이 두 줄을 삭제 또는 주석 처리 */
-  /* bottom: 0;            ← 삭제 또는 주석 처리 */
-  margin-top: auto;        /* 이 줄을 추가 */
-  background-color: #111;
-  color: #ccc;
-  padding: 20px 30px;
-  font-size: 13px;
-  border-top: 1px solid #444;
-}
+    .gnb .right {
+      display: flex;
+      gap: 70px;
+    }
+
+    .gnb .right a {
+      text-decoration: none;
+      color: #000;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .gnb .right a:hover {
+      color: #005bac;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 160px); /* gnb + footer 높이 고려 */
+      box-sizing: border-box;
+      padding: 20px;
+    }
+
+    main img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    footer {
+      width: 100vw;
+      background-color: #111;
+      color: #ccc;
+      font-size: 13px;
+      padding: 20px 160px;
+      box-sizing: border-box;
+    }
 
     .footer-top {
       display: flex;
       align-items: center;
       margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 20px;
     }
+
     .footer-top img {
       height: 24px;
-      margin-right: 10px;
     }
+
     .footer-top span {
       font-size: 15px;
       font-weight: bold;
       color: #fff;
-      margin-right: 30px;
     }
+
     .footer-links {
       display: flex;
       gap: 30px;
     }
+
     .footer-links a {
       color: #ccc;
       text-decoration: none;
-      font-size: 13px;
     }
+
     .footer-links a:hover {
       text-decoration: underline;
     }
-.footer-bottom {
-  border-top: 1px solid #444;
-  padding-top: 10px;
-  font-size: 12px;
-  color: #aaa;
-  line-height: 1.6;
-  text-align: left; /* ← 여기만 center → left 로 수정됨 */
-}
 
-/* ─── mindmap 전체 컨테이너 ─── */
-.mindmap-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px 0;
-}
-
-/* ─── 각 분기(branch) ─── */
-.branch {
-  display: flex;
-  align-items: flex-start;      /* 동그라미 텍스트와 박스 상단 맞춤 */
-  width: 100%;
-  max-width: 1280px;            /* 전체 너비 고정 */
-  margin-bottom: 50px;
-}
-
-/* 동그라미 크기/간격 */
-.branch .circle {
-  flex: 0 0 80px;
-  height: 80px;
-  border: 2px solid #003478;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #003478;
-  font-weight: bold;
-  margin-right: 40px;
-}
-
-/* ─── 박스 영역 ─── */
-.branch .boxes {
-  display: flex;
-  flex-wrap: wrap;              /* 여러 줄로 자동 배치 */
-  gap: 20px 30px;               /* 행 간 20px, 열 간 30px */
-  width: calc(100% - 120px);    /* 좌측 circle(80px+40px) 빼고 꽉 채움 */
-  align-content: flex-start;    /* 위쪽부터 채우기 */
-}
-
-/* 박스 기본 스타일 */
-.branch .boxes .box {
-  background-color: #4a6280;
-  color: white;
-  padding: 18px 20px;
-  font-size: 14px;
-  line-height: 1.6;
-  width: 270px;                 /* 박스 너비 고정 */
-  border-radius: 0;             /* 둥근 모서리 제거 */
-  box-sizing: border-box;
-}
-
-/* ─── 2ㆍ3번째 계산기/전화기 ─── */
-.map-block {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 1280px;
-  margin-bottom: 50px;
-}
-
-.map-block .circle {
-  flex: 0 0 80px;
-  margin-right: 20px;
-}
-
-.map-block .line {
-  width: 40px;
-  height: 2px;
-  background: #aaa;
-  margin-right: 20px;
-}
-
-.map-block .box {
-  background-color: #4a6280;
-  color: white;
-  padding: 20px;
-  width: 400px;                 /* 설명 박스 너비 고정 */
-  border-radius: 0;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-
-   
+    .footer-bottom {
+      border-top: 1px solid #444;
+      padding-top: 10px;
+      color: #aaa;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
 
   <!-- GNB -->
-<nav class="gnb">
-  <div class="left">
-    <img src="hywoman_logo.png" alt="한양여자대학교 로고">
-    <span>한양여자대학교</span>
-  </div>
-  <div class="right">
-    <a href="eng_typing.html">영문타자기</a>
-    <a href="kor_typing.html">한글타자기</a>
-    <a href="calculator.html">계산기</a>
-    <a href="phone.html">전화기</a>
-  </div>
-</nav>
-
-
-<!-- 전체 사이트맵 시작 -->
-<div class="site-map-container">
-
-  <!-- 1. 타자기 (상단 분기형 구조) -->
-  <div class="map-branch">
-    <div class="circle">타자기</div>
-    <div class="branch-boxes">
-      <div class="branch-box">
-        <div class="header-box">영문 타자기</div>
-        <div class="content-box">
-          영문 키보드 입력을 통해 영어 알파벳을 실시간으로 출력해보는 기능입니다.
-        </div>
-      </div>
-      <div class="branch-box">
-        <div class="header-box">한글 타자기</div>
-        <div class="content-box">
-          자모를 조합해 실제 한글 글자를 만드는 입력 방식으로,<br>
-          조합형과 나열형 입력 모드를 지원합니다.
-        </div>
-      </div>
+  <nav class="gnb">
+    <div class="left">
+      <img src="hywoman_logo.png" alt="로고">
+      <span>한양여자대학교</span>
     </div>
-  </div>
-
-  <!-- 2. 계산기 -->
-  <div class="map-block">
-    <div class="circle">계산기</div>
-    <div class="line"></div>
-    <div class="box">
-      일반 계산기처럼 숫자와 연산 기호를 입력하면<br>
-      실시간으로 수식이 계산되는 기능입니다.
+    <div class="right">
+      <a href="eng_typing.html">영문타자기</a>
+      <a href="kor_typing.html">한글타자기</a>
+      <a href="calculator.html">계산기</a>
+      <a href="phone.html">전화기</a>
     </div>
-  </div>
+  </nav>
 
-  <!-- 3. 전화기 -->
-  <div class="map-block">
-    <div class="circle">전화기</div>
-    <div class="line"></div>
-    <div class="box">
-      숫자패드를 클릭하거나 입력하면<br>
-      010-1234-5678처럼 자동으로 하이픈(-)이 삽입되는 전화번호 입력기입니다.
-    </div>
-  </div>
-
-</div>
-
-
+  <!-- 본문 이미지 -->
+  <main>
+    <img src="site_mape.png" alt="사이트 맵 이미지">
+  </main>
 
   <!-- Footer -->
   <footer>
     <div class="footer-top">
-      <img src="hywoman_logo.png" alt="한양여자대학교 로고">
+      <img src="hywoman_logo.png" alt="로고">
       <span>한양여자대학교</span>
       <div class="footer-links">
         <a href="eng_typing.html">영문타자기</a>
@@ -304,8 +157,7 @@ footer {
     </div>
     <div class="footer-bottom">
       <p>2402218 홍연의</p>
-      <p>04763 서울특별시 성동구 살곶이길 200(사근동)<br>
-      TEL 02.2290.2114 / FAX 02.2291.6111</p>
+      <p>04763 서울특별시 성동구 살곶이길 200(사근동)<br>TEL 02.2290.2114 / FAX 02.2291.6111</p>
       <p>© 2022 Hanyang Women's University All Rights Reserved.</p>
     </div>
   </footer>

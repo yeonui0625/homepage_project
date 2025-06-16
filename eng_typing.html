@@ -45,13 +45,7 @@ body {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.author-info {
-    background: rgba(255, 239, 184, 0.6);
-    border-radius: 10px;
-    padding: 15px;
-    display: inline-block;
-    color: #5a4a2f;
-}
+
 
 .author-info p {
     margin: 5px 0;
@@ -238,11 +232,17 @@ body {
 }
 
 
-.paper {
-  white-space: pre-wrap;
-  word-break: break-word;
+.key.active {
+    filter: brightness(90%);
+    transform: scale(0.95);
 }
 
+/* 기존 .key 스타일 유지, 여기에 hover 추가 */
+.key:hover,
+.key.active {
+    filter: brightness(90%);
+    transform: scale(0.95);
+}
 
     </style>
 </head>
@@ -251,9 +251,6 @@ body {
         <div class="typewriter-header">
             <h1>영문 타자기</h1>
             <div class="author-info">
-                <p>제작자: 홍연의</p>
-                <p>학번: 2402218</p>
-                <p>소속: 한양여자대학교 빅데이터학과</p>
             </div>
         </div>
 
@@ -275,80 +272,102 @@ body {
     </div>
 
     <div class="keyboard" id="keyboard">
-        <div class="row number-row">
-            <div class="key number-key" data-key="1">1</div>
-            <div class="key number-key" data-key="2">2</div>
-            <div class="key number-key" data-key="3">3</div>
-            <div class="key number-key" data-key="4">4</div>
-            <div class="key number-key" data-key="5">5</div>
-            <div class="key number-key" data-key="6">6</div>
-            <div class="key number-key" data-key="7">7</div>
-            <div class="key number-key" data-key="8">8</div>
-            <div class="key number-key" data-key="9">9</div>
-            <div class="key number-key" data-key="0">0</div>
-        </div>
-        <div class="row first-row">
-            <div class="key letter-key" data-key="q">q</div>
-            <div class="key letter-key" data-key="w">w</div>
-            <div class="key letter-key" data-key="e">e</div>
-            <div class="key letter-key" data-key="r">r</div>
-            <div class="key letter-key" data-key="t">t</div>
-            <div class="key letter-key" data-key="y">y</div>
-            <div class="key letter-key" data-key="u">u</div>
-            <div class="key letter-key" data-key="i">i</div>
-            <div class="key letter-key" data-key="o">o</div>
-            <div class="key letter-key" data-key="p">p</div>
-        </div>
-        <div class="row second-row">
-            <div class="key letter-key" data-key="a">a</div>
-            <div class="key letter-key" data-key="s">s</div>
-            <div class="key letter-key" data-key="d">d</div>
-            <div class="key letter-key" data-key="f">f</div>
-            <div class="key letter-key" data-key="g">g</div>
-            <div class="key letter-key" data-key="h">h</div>
-            <div class="key letter-key" data-key="j">j</div>
-            <div class="key letter-key" data-key="k">k</div>
-            <div class="key letter-key" data-key="l">l</div>
-        </div>
-        <div class="row third-row">
-            <div class="key letter-key" data-key="z">z</div>
-            <div class="key letter-key" data-key="x">x</div>
-            <div class="key letter-key" data-key="c">c</div>
-            <div class="key letter-key" data-key="v">v</div>
-            <div class="key letter-key" data-key="b">b</div>
-            <div class="key letter-key" data-key="n">n</div>
-            <div class="key letter-key" data-key="m">m</div>
-            <div class="key letter-key" data-key=",">,</div>
-            <div class="key letter-key special-toggle" data-key=".">한</div>
-        </div>
-    </div>
+  <!-- 숫자 줄 -->
+  <div class="row number-row">
+    <div class="key number-key" data-key="1">1</div>
+    <div class="key number-key" data-key="2">2</div>
+    <div class="key number-key" data-key="3">3</div>
+    <div class="key number-key" data-key="4">4</div>
+    <div class="key number-key" data-key="5">5</div>
+    <div class="key number-key" data-key="6">6</div>
+    <div class="key number-key" data-key="7">7</div>
+    <div class="key number-key" data-key="8">8</div>
+    <div class="key number-key" data-key="9">9</div>
+    <div class="key number-key" data-key="0">0</div>
+    <div class="key letter-key" data-key="-">-</div>
+    <div class="key letter-key" data-key="=">=</div>
+    <div class="key letter-key wide" style="flex: 1" data-key="Backspace">⌫</div>
+  </div>
+
+  <!-- QWERTY 줄 -->
+  <div class="row first-row">
+    <div class="key letter-key wide" style="flex: 1.2">Tab</div>
+    <div class="key letter-key" data-key="q">q</div>
+    <div class="key letter-key" data-key="w">w</div>
+    <div class="key letter-key" data-key="e">e</div>
+    <div class="key letter-key" data-key="r">r</div>
+    <div class="key letter-key" data-key="t">t</div>
+    <div class="key letter-key" data-key="y">y</div>
+    <div class="key letter-key" data-key="u">u</div>
+    <div class="key letter-key" data-key="i">i</div>
+    <div class="key letter-key" data-key="o">o</div>
+    <div class="key letter-key" data-key="p">p</div>
+    <div class="key letter-key" data-key="[">[</div>
+    <div class="key letter-key" data-key="]">]</div>
+  </div>
+
+  <!-- ASDF 줄 -->
+  <div class="row second-row">
+    <div class="key letter-key wide" style="flex: 1.5">Caps</div>
+    <div class="key letter-key" data-key="a">a</div>
+    <div class="key letter-key" data-key="s">s</div>
+    <div class="key letter-key" data-key="d">d</div>
+    <div class="key letter-key" data-key="f">f</div>
+    <div class="key letter-key" data-key="g">g</div>
+    <div class="key letter-key" data-key="h">h</div>
+    <div class="key letter-key" data-key="j">j</div>
+    <div class="key letter-key" data-key="k">k</div>
+    <div class="key letter-key" data-key="l">l</div>
+    <div class="key letter-key" data-key=";">;</div>
+    <div class="key letter-key" data-key="'">'</div>
+    <div class="key letter-key wide" style="flex: 1.5" data-key="Enter">Enter</div>
+  </div>
+
+  <!-- ZXCV 줄 -->
+  <div class="row third-row">
+    <div class="key letter-key wide" style="flex: 2">Shift</div>
+    <div class="key letter-key" data-key="z">z</div>
+    <div class="key letter-key" data-key="x">x</div>
+    <div class="key letter-key" data-key="c">c</div>
+    <div class="key letter-key" data-key="v">v</div>
+    <div class="key letter-key" data-key="b">b</div>
+    <div class="key letter-key" data-key="n">n</div>
+    <div class="key letter-key" data-key="m">m</div>
+    <div class="key letter-key" data-key=",">,</div>
+    <div class="key letter-key" data-key=".">.</div>
+    <div class="key letter-key" data-key="/">/</div>
+    <div class="key letter-key wide" style="flex: 2">Shift</div>
+  </div>
+
+  <!-- 하단줄 -->
+  <div class="row">
+    <div class="key letter-key wide" style="flex: 4" data-key=" ">Space</div>
+  </div>
 </div>
 
 <script>
-// 전역 변수
 let currentText = '';
-
+let ctrlPressed = false;
 const paper = document.getElementById('paper');
-const keyboard = document.getElementById('keyboard');
 const keys = document.querySelectorAll('.key');
 
-function updatePaper(extraText = '') {
-    paper.textContent = currentText + extraText;
+function updatePaper(extra = '') {
+    paper.textContent = currentText + extra;
 }
 
-function handleKeyPress(keyValue, keyElement) {
+function handleKeyPress(keyValue, keyElement = null) {
     animateKey(keyElement);
 
-    if (keyValue === ' ') {
+    if (keyValue === 'Backspace') {
+        deleteLastChar();
+    } else if (keyValue === 'Enter') {
+        addNewLine();
+    } else if (keyValue === ' ') {
         currentText += ' ';
         updatePaper();
-    } else if (keyValue === 'Backspace') {
-        if (currentText.length > 0) {
-            currentText = currentText.slice(0, -1);
-            updatePaper();
-        }
-    } else if (/^[a-z0-9,.]$/.test(keyValue)) {
-        currentText += keyValue;
+    } else if (/^[a-z0-9,.\\[\];'\-=/]$/i.test(keyValue)) {
+        const char = ctrlPressed ? keyValue.toUpperCase() : keyValue;
+        currentText += char;
         updatePaper();
     }
 }
@@ -356,24 +375,81 @@ function handleKeyPress(keyValue, keyElement) {
 function animateKey(key) {
     if (!key) return;
     key.classList.add('active');
-    setTimeout(() => key.classList.remove('active'), 200);
+    setTimeout(() => key.classList.remove('active'), 150);
 }
 
+function deleteLastChar() {
+    if (currentText.length > 0) {
+        currentText = currentText.slice(0, -1);
+        updatePaper();
+    }
+}
+
+function clearAll() {
+    currentText = '';
+    updatePaper();
+}
+
+function addNewLine() {
+    currentText += '\n';
+    updatePaper();
+}
+
+// ✅ 키보드로 누를 때: 색 변화 적용 (keydown)
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'Shift' || e.key === 'CapsLock') return;
+    if (e.key === 'Control') ctrlPressed = true;
 
-    let keyChar = e.key.toLowerCase();
-    const keyElement = document.querySelector(`.key[data-key="${keyChar}"]`);
-    if (!keyElement) return;
+    const keyChar = e.key;
+    const lowerKey = keyChar.toLowerCase();
+    const keyElement = document.querySelector(`.key[data-key="${keyChar === ' ' ? ' ' : lowerKey}"]`);
 
-    e.preventDefault();
-    handleKeyPress(keyChar, keyElement);
+    if (['Enter', 'Backspace', ' '].includes(keyChar) || /^[a-z0-9,.\\[\];'\-=/]$/i.test(keyChar)) {
+        e.preventDefault();
+        handleKeyPress(keyChar, keyElement);
+        if (keyElement) keyElement.classList.add('active');
+    } else if (e.key === 'Escape') {
+        clearAll();
+    }
 });
 
-// 초기 상태 설정 (영어 키보드 표시)
+// ✅ 키보드에서 손 뗐을 때: active 해제
+window.addEventListener('keyup', (e) => {
+    if (e.key === 'Control') ctrlPressed = false;
+
+    const keyChar = e.key;
+    const lowerKey = keyChar.toLowerCase();
+    const keyElement = document.querySelector(`.key[data-key="${keyChar === ' ' ? ' ' : lowerKey}"]`);
+
+    if (keyElement) keyElement.classList.remove('active');
+});
+
+// ✅ 마우스로 클릭할 때도 동일하게 처리
 keys.forEach(key => {
-    key.textContent = key.dataset.key;
+    key.addEventListener('click', () => {
+        animateKey(key); // 눌림 효과
+
+        const val = key.dataset.key;
+        if (!val) {
+            const keyText = key.textContent.trim().toLowerCase();
+
+            if (keyText === 'enter') addNewLine();
+            else if (keyText === 'space') {
+                currentText += ' ';
+                updatePaper();
+            } else if (keyText === '⌫' || keyText === 'backspace') {
+                deleteLastChar();
+            } else if (keyText === 'ctrl') {
+                ctrlPressed = true;
+                setTimeout(() => ctrlPressed = false, 300);
+            } else if (/^[a-z]$/.test(keyText)) {
+                currentText += ctrlPressed ? keyText.toUpperCase() : keyText;
+                updatePaper();
+            }
+            return;
+        }
+
+        handleKeyPress(val, key);
+    });
 });
-
-
 </script>
+

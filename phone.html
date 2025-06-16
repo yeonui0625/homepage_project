@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <title>전화기</title>
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* 스크롤 방지 추가 */
+}
+
 
     .phone-container {
       display: flex;
@@ -60,86 +62,130 @@
       background-color: #fddc7a;
     }
 
+    .keypad button.pressed {
+      background-color: #fddc7a !important;
+    }
 
-    /* 키보드 입력 시 버튼에 임시로 적용할 클래스 */
-.keypad button.pressed {
-  background-color: #fddc7a !important;
-}
+    .control-buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
 
+    .control-buttons button {
+      padding: 6px 12px;
+      font-size: 14px;
+      background-color: #fff;
+      border: 1px solid #e3b865;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
+    .control-buttons button:hover {
+      background-color: #fddc7a;
+    }
+
+    .notice {
+      color: red;
+      font-size: 12px;
+      height: 18px;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
   <div class="phone-container">
-    <div id="display"></div>
+    <div id="display" aria-label="입력창" title="전화번호 입력창"></div>
     <div class="keypad">
-      <button onclick="press('1')">1</button>
-      <button onclick="press('2')">2</button>
-      <button onclick="press('3')">3</button>
-      <button onclick="press('4')">4</button>
-      <button onclick="press('5')">5</button>
-      <button onclick="press('6')">6</button>
-      <button onclick="press('7')">7</button>
-      <button onclick="press('8')">8</button>
-      <button onclick="press('9')">9</button>
-      <button onclick="press('0')">0</button>
-      <button onclick="press('*')">*</button>
-      <button onclick="press('#')">#</button>
+      <button onclick="clearDisplay()" title="전체 삭제">AC</button>
+      <button onclick="press('')" title=""></button>
+      <button onclick="deleteLast()" title="한 글자 삭제">⌫</button>
+      <button onclick="press('1')" title="1">1</button>
+      <button onclick="press('2')" title="2">2</button>
+      <button onclick="press('3')" title="3">3</button>
+      <button onclick="press('4')" title="4">4</button>
+      <button onclick="press('5')" title="5">5</button>
+      <button onclick="press('6')" title="6">6</button>
+      <button onclick="press('7')" title="7">7</button>
+      <button onclick="press('8')" title="8">8</button>
+      <button onclick="press('9')" title="9">9</button>
+      <button onclick="press('0')" title="0">0</button>
+      <button onclick="press('*')" title="*">*</button>
+      <button onclick="press('#')" title="#">#</button>
     </div>
+    </div>
+
+    <div class="notice" id="notice"></div>
   </div>
 
   <script>
- let rawInput = '';
+    let rawInput = '';
 
-function formatNumber(input) {
-  // 하이픈 없이 최대 11글자만 남기기 (왜냐면 하이픈이 2개 추가되면 총 13글자니까)
-  const raw = input.slice(0, 11); 
-  let result = '';
+    function formatNumber(input) {
+      const raw = input.slice(0, 11);
+      let result = '';
+      for (let i = 0; i < raw.length; i++) {
+        if (i === 3 || i === 7) result += '-';
+        result += raw[i];
+      }
+      return result;
+    }
 
-  for (let i = 0; i < raw.length; i++) {
-    if (i === 3 || i === 7) result += '-'; // 4번째, 8번째 문자 앞에 하이픈
-    result += raw[i];
-  }
+    function press(char) {
+      if (!/[0-9*#]/.test(char)) return;
 
-  return result;
-}
+      const testInput = rawInput + char;
+      if (formatNumber(testInput).length > 13) {
+        showNotice('최대 11자리까지 입력 가능합니다.');
+        return;
+      }
 
+      rawInput += char;
+      updateDisplay();
+    }
 
+    function deleteLast() {
+      rawInput = rawInput.slice(0, -1);
+      updateDisplay();
+    }
 
-function press(char) {
-  if (!/[0-9*#]/.test(char)) return;
+    function clearDisplay() {
+      rawInput = '';
+      updateDisplay();
+    }
 
-  // 미리 추가했을 때 결과 문자열이 13자를 초과하면 무시
-  const testInput = rawInput + char;
-  if (formatNumber(testInput).length > 13) return;
+    function updateDisplay() {
+      document.getElementById('display').textContent = formatNumber(rawInput);
+      hideNotice();
+    }
 
-  rawInput += char;
-  document.getElementById('display').textContent = formatNumber(rawInput);
-}
+    function showNotice(msg) {
+      document.getElementById('notice').textContent = msg;
+    }
 
+    function hideNotice() {
+      document.getElementById('notice').textContent = '';
+    }
 
+    window.addEventListener('keydown', function(e) {
+      const key = e.key;
+      if (key === 'Enter') return; // 엔터키 무시
 
-// 마우스 클릭 입력은 HTML에서 onclick으로 연결됨
-
-// 키보드 입력 + 버튼 반짝임
-window.addEventListener('keydown', function(e) {
-  const key = e.key;
-
-  if (/[0-9*#]/.test(key)) {
-    press(key);
-
-    // 시각 효과: 눌린 버튼 배경 변경
-    const buttons = document.querySelectorAll('.keypad button');
-    buttons.forEach(btn => {
-      if (btn.textContent === key) {
-        btn.classList.add('pressed');
-        setTimeout(() => btn.classList.remove('pressed'), 150);
+      if (/[0-9*#]/.test(key)) {
+        press(key);
+        const buttons = document.querySelectorAll('.keypad button');
+        buttons.forEach(btn => {
+          if (btn.textContent === key) {
+            btn.classList.add('pressed');
+            setTimeout(() => btn.classList.remove('pressed'), 150);
+          }
+        });
+      } else if (key === 'Backspace') {
+        deleteLast();
+      } else if (key === 'Escape') {
+        clearDisplay();
       }
     });
-  }
-});
-
-
   </script>
 </body>
 </html>
