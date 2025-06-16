@@ -237,6 +237,7 @@ body {
     transform: scale(0.95);
 }
 
+
 /* 기존 .key 스타일 유지, 여기에 hover 추가 */
 .key:hover,
 .key.active {
@@ -425,10 +426,10 @@ window.addEventListener('keyup', (e) => {
 
 // ✅ 마우스로 클릭할 때도 동일하게 처리
 keys.forEach(key => {
-    key.addEventListener('click', () => {
-        animateKey(key); // 눌림 효과
+  key.addEventListener('click', () => {
+    const val = key.dataset.key;
 
-        const val = key.dataset.key;
+
         if (!val) {
             const keyText = key.textContent.trim().toLowerCase();
 
@@ -448,8 +449,9 @@ keys.forEach(key => {
             return;
         }
 
-        handleKeyPress(val, key);
-    });
+    animateKey(key);
+    handleKeyPress(val, key);
+  });
 });
 </script>
 
